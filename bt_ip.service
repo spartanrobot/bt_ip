@@ -1,0 +1,10 @@
+[Unit]
+Description=Bluetooth Server
+After=multi-user.target
+
+[Service]
+Type=idle
+ExecStart=/usr/bin/python /home/admin/bt_ip/server.py
+
+[Install]
+WantedBy=multi-user.target

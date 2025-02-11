@@ -1,6 +1,7 @@
 """
 Example for a BLE 4.0 Server
 """
+
 import sys
 import logging
 import asyncio
@@ -27,18 +28,20 @@ if sys.platform in ["darwin", "win32"]:
 else:
     trigger = asyncio.Event()
 
+
 def get_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.settimeout(0)
     try:
         # doesn't even have to be reachable
-        s.connect(('10.254.254.254', 1))
+        s.connect(("10.254.254.254", 1))
         ip = s.getsockname()[0]
     except Exception:
-        ip = '127.0.0.1'
+        ip = "127.0.0.1"
     finally:
         s.close()
     return ip
+
 
 def read_request(characteristic: BlessGATTCharacteristic, **kwargs) -> bytearray:
     logger.debug(f"Sending out IP Address")
@@ -67,14 +70,10 @@ async def run(loop):
     # Add a Characteristic to the service
     my_char_uuid = "51FF12BB-3ED8-46E5-B4F9-D64E2FEC021B"
     char_flags = (
-        GATTCharacteristicProperties.read
-        | GATTCharacteristicProperties.write
-        | GATTCharacteristicProperties.indicate
+        GATTCharacteristicProperties.read | GATTCharacteristicProperties.write | GATTCharacteristicProperties.indicate
     )
     permissions = GATTAttributePermissions.readable | GATTAttributePermissions.writeable
-    await server.add_new_characteristic(
-        my_service_uuid, my_char_uuid, char_flags, None, permissions
-    )
+    await server.add_new_characteristic(my_service_uuid, my_char_uuid, char_flags, None, permissions)
 
     logger.debug(server.get_characteristic(my_char_uuid))
     await server.start()
